@@ -13,7 +13,6 @@
         </p>
     </noscript>
 
-    {{-- Hasil tidak ditemukan (kedaluwarsa, data browser dihapus, atau pindah perangkat) --}}
     <section id="state-kosong" hidden class="rounded-4xl bg-white p-8 text-center shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-12">
         <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-3xl text-slate-500">
             <i class='bx bx-error-circle'></i>
@@ -30,34 +29,8 @@
 
     <section id="state-hasil" hidden>
 
-        {{-- Muncul kalau butir keselamatan dicentang. Daftar hanya berisi kontak yang is_verified. --}}
-        <div id="banner-bantuan" hidden class="mb-6 rounded-3xl bg-rose-50 p-5 ring-1 ring-rose-200 sm:p-6">
-            <p class="flex items-start gap-2 font-bold text-rose-900">
-                <i class='bx bx-heart mt-0.5 text-xl'></i>
-                <span>Kamu menandai ada pikiran untuk menyakiti diri sendiri atau nggak ingin melanjutkan.</span>
-            </p>
-            <p class="mt-2 text-sm leading-relaxed text-rose-900/80">
-                Itu hal yang serius, dan kamu nggak perlu menghadapinya sendirian. Kalau kamu merasa tidak aman sekarang, hubungi layanan darurat setempat atau orang terdekat yang kamu percaya.
-            </p>
-            @if (count($support) > 0)
-                <ul class="mt-4 space-y-2">
-                    @foreach ($support as $s)
-                        <li class="rounded-2xl bg-white/80 p-3 text-sm">
-                            <p class="font-bold text-slate-800">{{ $s['name'] }}</p>
-                            <p class="mt-0.5 text-slate-600">{{ $s['description'] }}</p>
-                            @if (!empty($s['phone']))
-                                <p class="mt-1 font-bold text-rose-800">{{ $s['phone'] }}</p>
-                            @endif
-                            @if (!empty($s['url']))
-                                <a href="{{ $s['url'] }}" target="_blank" rel="noopener noreferrer" class="mt-1 inline-block font-bold text-indigo-700 hover:underline">Buka situs</a>
-                            @endif
-                        </li>
-                    @endforeach
-                </ul>
-            @endif
-        </div>
+        @include('partials.banner-bantuan', ['support' => $support])
 
-        {{-- LAYAR 4: HASIL ANALISIS --}}
         <div class="rounded-4xl bg-white p-6 shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-10">
             <h1 tabindex="-1" class="text-2xl font-extrabold tracking-tight text-indigo-950 focus:outline-none sm:text-3xl">
                 Yang paling kelihatan dari jawabanmu...
@@ -107,7 +80,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var patterns = {};
     data.patterns.forEach(function (p) { patterns[p.slug] = p; });
 
-    // ---- Ambil asesmen: dari id di URL, lalu hash cadangan, lalu yang terbaru ----
     var params = new URLSearchParams(window.location.search);
     var id = params.get('id');
     var record = Mindway.getAssessment(id);
@@ -118,8 +90,6 @@ document.addEventListener('DOMContentLoaded', function () {
         fromHash = !!record;
     }
     if (!record && !id) record = Mindway.latestAssessment();
-
-    // pastikan bentuk data masuk akal sebelum dipakai
     if (record && !Array.isArray(record.results)) record = null;
 
     if (!record) {
@@ -129,10 +99,8 @@ document.addEventListener('DOMContentLoaded', function () {
     $('state-hasil').hidden = false;
     $('state-hasil').querySelector('h1').focus({ preventScroll: true });
 
-    // ---- Banner keselamatan ----
     if (record.hasRedFlag) $('banner-bantuan').hidden = false;
 
-    // ---- Hasil ----
     var results = record.results.filter(function (r) { return patterns[r.patternSlug]; });
     var n = results.length;
 
@@ -185,13 +153,11 @@ document.addEventListener('DOMContentLoaded', function () {
         ul.appendChild(li);
     });
 
-    // ---- Tombol lanjut membawa id supaya tahap berikutnya bisa membaca asesmen yang sama ----
     if (record.id) {
         var next = $('btn-saran');
         next.href = data.nextUrl + '?id=' + encodeURIComponent(record.id) + (fromHash ? window.location.hash : '');
     }
 
-    // ---- Info penyimpanan ----
     if (fromHash) $('info-tidak-simpan').hidden = false;
     else $('info-simpan').hidden = false;
 });
