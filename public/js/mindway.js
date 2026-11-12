@@ -3,6 +3,7 @@
 
   var KEY = 'mindway:v1';
   var TTL_DAYS = 30;
+  var MAX_ASSESSMENTS = 5;
 
   function empty() {
     return { version: 1, assessments: [], journal: [] };
@@ -37,6 +38,8 @@
     };
     var a = data.assessments.filter(function (x) { return x && alive(x.createdAt); });
     var j = data.journal.filter(function (x) { return x && alive(x.entryDate); });
+    a.sort(function (x, y) { return Date.parse(y.createdAt) - Date.parse(x.createdAt); });
+    if (a.length > MAX_ASSESSMENTS) a = a.slice(0, MAX_ASSESSMENTS);
     var changed = a.length !== data.assessments.length || j.length !== data.journal.length;
     data.assessments = a;
     data.journal = j;
@@ -55,7 +58,24 @@
     data.assessments.forEach(function (x, idx) { if (x.id === record.id) i = idx; });
     if (i >= 0) data.assessments[i] = Object.assign({}, data.assessments[i], record);
     else data.assessments.push(record);
+    prune(data);
     return write(data);
+  }
+
+  function listAssessments() {
+    return load().assessments.slice();
+  }
+
+  function removeAssessment(id) {
+    var data = load();
+    var n = data.assessments.length;
+    data.assessments = data.assessments.filter(function (x) { return x.id !== id; });
+    if (data.assessments.length === n) return false;
+    return write(data);
+  }
+
+  function clearAll() {
+    try { global.localStorage.removeItem(KEY); return true; } catch (e) { return false; }
   }
 
   function getAssessment(id) {
@@ -66,23 +86,9 @@
   }
 
   function latestAssessment() {
-    var list = load().assessments.slice().sort(function (a, b) {
-      return Date.parse(b.createdAt) - Date.parse(a.createdAt);
-    });
-    return list[0] || null;
+    return load().assessments[0] || null;
   }
 
-  /**
-   * Hitung skor pola.
-   *  - skor pola = jumlah bobot sinyal yang dicentang, dikelompokkan per pola
-   *  - sinyal keselamatan (redFlag) tidak masuk skor, hanya menandai hasRedFlag
-   *  - urut skor tertinggi; kalau seri, pola dengan urutan (sort_order) lebih kecil lebih dulu
-   *  - ambil 3 teratas
-   *
-   * @param {string[]} signalSlugs  sinyal yang dicentang
-   * @param {Object}   signalsMap   slug => { pattern, weight, redFlag }
-   * @param {Object}   patternOrder slug pola => sort_order
-   */
   function scorePatterns(signalSlugs, signalsMap, patternOrder) {
     var scores = {};
     var hasRedFlag = false;
@@ -131,7 +137,11 @@
 
   global.Mindway = {
     TTL_DAYS: TTL_DAYS,
+    MAX_ASSESSMENTS: MAX_ASSESSMENTS,
     load: load,
+    listAssessments: listAssessments,
+    removeAssessment: removeAssessment,
+    clearAll: clearAll,
     saveAssessment: saveAssessment,
     getAssessment: getAssessment,
     latestAssessment: latestAssessment,

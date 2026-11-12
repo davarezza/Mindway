@@ -6,6 +6,8 @@
 
 @section('container')
 <main class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+
+    {{-- Progres hanya tampil di layar pertanyaan (1/3) dan langkah (2/3). Layar ke-3 adalah Ruang Tenang. --}}
     <div id="progress" hidden class="mb-8 flex items-center gap-4">
         <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200"
              role="progressbar" aria-label="Progres" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1" id="progress-track">
@@ -20,6 +22,7 @@
         </p>
     </noscript>
 
+    {{-- Asesmen tidak ditemukan (kedaluwarsa, data browser dihapus, atau pindah perangkat) --}}
     <section id="state-kosong" hidden class="rounded-4xl bg-white p-8 text-center shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-12">
         <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-3xl text-slate-500">
             <i class='bx bx-error-circle'></i>
@@ -34,6 +37,7 @@
         </a>
     </section>
 
+    {{-- ============ LAYAR 5: PETA KONDISIKU ============ --}}
     <section id="layar-peta" hidden>
         @include('partials.banner-bantuan', ['support' => $support])
 
@@ -71,6 +75,7 @@
         <ul id="daftar-mode" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4"></ul>
     </section>
 
+    {{-- ============ LAYAR 6: PERTANYAAN MODE ============ --}}
     <section id="layar-pertanyaan" hidden>
         <h1 id="q-judul" tabindex="-1" class="text-3xl font-extrabold tracking-tight text-indigo-950 focus:outline-none"></h1>
         <p id="q-bantu" class="mt-2 text-sm text-slate-600"></p>
@@ -92,11 +97,14 @@
         </div>
     </section>
 
+    {{-- ============ LAYAR 7: REKOMENDASI LANGKAH KECIL ============ --}}
     <section id="layar-langkah" hidden>
         <h1 id="l-judul" tabindex="-1" class="text-3xl font-extrabold tracking-tight text-indigo-950 focus:outline-none"></h1>
         <p id="l-intro" class="mt-2 text-sm text-slate-600"></p>
 
         <ol id="l-daftar" class="mt-6 space-y-3"></ol>
+
+        {{-- Hanya tampil di mode Bantuan. Isinya kontak is_verified; kalau belum ada, teks umum tanpa nomor. --}}
         <div id="daftar-layanan" hidden class="mt-6 rounded-2xl bg-white p-5 ring-1 ring-slate-100">
             <h2 class="flex items-center gap-2 text-sm font-bold text-indigo-950">
                 <i class='bx bx-support text-lg text-indigo-600'></i> Layanan yang bisa kamu hubungi
@@ -138,6 +146,7 @@
         </div>
     </section>
 
+    {{-- ============ LAYAR 8: RUANG TENANG ============ --}}
     <section id="layar-penutup" hidden>
         <div class="rounded-4xl bg-white p-8 text-center shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-12">
             <div class="relative mx-auto flex h-36 w-36 items-center justify-center" aria-hidden="true">
@@ -180,6 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var data = JSON.parse(document.getElementById('peta-data').textContent);
     var $ = function (id) { return document.getElementById(id); };
 
+    // ---------- Ambil asesmen: id di URL -> hash cadangan -> yang terbaru ----------
     var params = new URLSearchParams(window.location.search);
     var id = params.get('id');
     var record = Mindway.getAssessment(id);
@@ -196,6 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     $('info-simpan').hidden = false;
 
+    // ---------- Layar ----------
     var screens = { peta: $('layar-peta'), pertanyaan: $('layar-pertanyaan'), langkah: $('layar-langkah'), penutup: $('layar-penutup') };
     var progressStep = { pertanyaan: 1, langkah: 2 };
 
@@ -215,6 +226,8 @@ document.addEventListener('DOMContentLoaded', function () {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
+    // ---------- Penyimpanan: hanya memperbarui asesmen yang memang sudah tersimpan ----------
+    // (kalau hasil datang dari #hash karena localStorage gagal, tidak ada yang disimpan)
     function persistAction(action) {
         if (!Mindway.getAssessment(record.id)) return false;
         return Mindway.saveAssessment({ id: record.id, action: action });
@@ -222,6 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var state = { mode: null, optionIndex: null, planSlug: null, plan: null, step: null };
 
+    // ---------- Pembantu DOM ----------
     function el(tag, cls, text) {
         var e = document.createElement(tag);
         if (cls) e.className = cls;
@@ -247,6 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return { label: label, input: input };
     }
 
+    // ---------- LAYAR 5: Peta Kondisiku ----------
     function renderPeta() {
         var results = record.results.filter(function (r) { return data.patterns[r.patternSlug]; });
         var top = results.length ? data.patterns[results[0].patternSlug] : null;
@@ -263,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 li.firstChild.style.backgroundColor = p.color;
                 $('peta-terjadi').appendChild(li);
             });
+            // tiga kotak lainnya mengikuti pola dengan skor tertinggi
             $('peta-sekarang').appendChild(bullet(top.nowAction, 'bg-emerald-500'));
             $('peta-tunggu').appendChild(bullet(top.canWait, 'bg-sky-500'));
             $('peta-perhatian').appendChild(bullet(top.watchNote, 'bg-violet-500'));
@@ -271,6 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
             $('peta-kosong').hidden = false;
         }
 
+        // Kalau ada tanda keselamatan, mode Bantuan ditaruh paling depan dan diberi tanda.
         var modes = data.modes.slice();
         if (record.hasRedFlag) {
             modes.sort(function (a, b) { return (b.slug === 'bantuan') - (a.slug === 'bantuan'); });
@@ -296,10 +313,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // ---------- LAYAR 6: pertanyaan mode ----------
     function startMode(mode) {
         state = { mode: mode, optionIndex: null, planSlug: null, plan: null, step: null };
 
         if (!mode.question || !mode.question.options.length) {
+            // mode tanpa pertanyaan: langsung ke rencana pertama
             var first = Object.keys(mode.plans)[0];
             if (!first) return;
             openPlan(first);
@@ -340,6 +359,7 @@ document.addEventListener('DOMContentLoaded', function () {
         openPlan(slug);
     });
 
+    // ---------- LAYAR 7: langkah kecil ----------
     var stepColors = ['bg-sky-500', 'bg-amber-500', 'bg-emerald-500', 'bg-indigo-500', 'bg-violet-500'];
 
     function openPlan(slug) {
@@ -398,6 +418,7 @@ document.addEventListener('DOMContentLoaded', function () {
         go('penutup');
     });
 
+    // ---------- LAYAR 8: Ruang Tenang ----------
     function finish(outcome) {
         persistAction({
             modeSlug: state.mode.slug,
@@ -408,16 +429,21 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (outcome === 'masih_berat') {
+            // kembali ke peta supaya bisa memilih bantuan lain
             $('catatan-berat').hidden = false;
             go('peta');
             return;
         }
-        window.location.href = data.homeUrl;
+        // Selesai -> lihat petanya tersimpan di Riwayat; Istirahat dulu -> beranda tanpa tuntutan apa pun
+        window.location.href = outcome === 'selesai'
+            ? data.riwayatUrl + '?id=' + encodeURIComponent(record.id)
+            : data.homeUrl;
     }
     $('p-selesai').addEventListener('click', function () { finish('selesai'); });
     $('p-berat').addEventListener('click', function () { finish('masih_berat'); });
     $('p-istirahat').addEventListener('click', function () { finish('istirahat_dulu'); });
 
+    // ---------- Mulai ----------
     renderPeta();
     go('peta');
 });

@@ -34,12 +34,12 @@ class RiwayatController extends Controller
         ])->all();
 
         $payload = [
-            'patterns'  => $patterns,
-            'modes'     => $modes,
-            'startUrl'  => route('asesmen'),
-            'hasilUrl'  => route('asesmen.hasil'),
-            'petaUrl'   => route('peta'),
-            'homeUrl'   => url('/'),
+            'patterns' => $patterns,
+            'modes'    => $modes,
+            'startUrl' => route('asesmen'),
+            'hasilUrl' => route('asesmen.hasil'),
+            'petaUrl'  => route('peta'),
+            'homeUrl'  => url('/'),
         ];
 
         return view('riwayat.index', compact('payload'));

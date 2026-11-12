@@ -77,6 +77,7 @@ class PetaController extends Controller
             'modes'     => $modes,
             'homeUrl'   => url('/'),
             'startUrl'  => route('asesmen'),
+            'riwayatUrl' => route('riwayat'),
         ];
 
         return view('peta.index', compact('payload', 'support'));

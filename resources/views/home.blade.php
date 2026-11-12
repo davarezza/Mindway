@@ -51,6 +51,9 @@
                 <a href="#cara-kerja" class="text-sm font-bold text-indigo-800 hover:underline">
                     Lihat cara kerjanya
                 </a>
+                <a href="{{ url('/riwayat') }}" class="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-800 hover:underline">
+                    <i class='bx bx-history text-lg'></i> Peta &amp; riwayatku
+                </a>
             </div>
 
             <ul class="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-xs font-medium text-slate-500">
