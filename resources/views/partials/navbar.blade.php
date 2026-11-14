@@ -1,9 +1,9 @@
 @php
     $links = [
         ['label' => 'Beranda', 'href' => url('/'),          'active' => request()->is('/')],
-        ['label' => 'Riwayat', 'href' => url('/riwayat'),   'active' => request()->is('riwayat')],
         ['label' => 'Tentang', 'href' => url('/tentang'),   'active' => request()->is('tentang')],
         ['label' => 'Fitur',   'href' => url('/') . '#fitur', 'active' => false],
+        ['label' => 'Riwayat', 'href' => url('/riwayat'),   'active' => request()->is('riwayat')],
     ];
 @endphp
 

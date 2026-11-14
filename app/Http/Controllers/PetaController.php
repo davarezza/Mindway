@@ -9,23 +9,17 @@ use App\Support\Icon;
 
 class PetaController extends Controller
 {
-    /**
-     * Layar 5 (Peta Kondisiku), 6 (pertanyaan mode), 7 (langkah kecil), dan 8 (Ruang Tenang).
-     *
-     * Keempat layar berada di satu halaman dan dijalankan di browser. Server mengirim seluruh
-     * konten (pola, mode, pertanyaan, rencana, langkah) sebagai JSON, jadi mode yang dipilih
-     * pengguna tidak muncul di URL maupun log server. Asesmen dibaca dari localStorage lewat ?id=.
-     */
     public function index()
     {
         $patterns = Pattern::ordered()->get()->mapWithKeys(fn ($p) => [
             $p->slug => [
-                'title'     => $p->title,
-                'icon'      => Icon::bx($p->icon),
-                'color'     => $p->color,
-                'nowAction' => $p->now_action,   // "Yang bisa dilakukan sekarang"
-                'canWait'   => $p->can_wait,     // "Yang tidak perlu diselesaikan sekarang"
-                'watchNote' => $p->watch_note,   // "Yang perlu diperhatikan"
+                'title'       => $p->title,
+                'description' => $p->description,
+                'icon'        => Icon::bx($p->icon),
+                'color'       => $p->color,
+                'nowAction'   => $p->now_action,
+                'canWait'     => $p->can_wait,
+                'watchNote'   => $p->watch_note,
             ],
         ])->all();
 

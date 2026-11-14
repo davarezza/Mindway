@@ -109,7 +109,6 @@
         </ol>
     </section>
 
-    {{-- KEUNGGULAN --}}
     <section id="fitur" class="relative mx-auto max-w-6xl scroll-mt-20 px-4 pb-16 sm:px-6 lg:pb-24">
         <div class="rounded-4xl bg-indigo-50 p-6 sm:p-10">
             <h2 class="text-2xl font-extrabold tracking-tight text-indigo-950 sm:text-3xl">Kenapa Mindway?</h2>
