@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,7 +11,6 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            scroll-behavior: smooth;
         }
     </style>
 </head>

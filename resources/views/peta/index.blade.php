@@ -5,45 +5,23 @@
 @endsection
 
 @section('container')
-<div class="relative overflow-hidden">
-<div id="dekor" hidden class="pointer-events-none absolute inset-0 z-0" aria-hidden="true">
-    <span class="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-indigo-100/80 blur-2xl"></span>
-    <span class="absolute -left-28 top-[28rem] h-72 w-72 rounded-full bg-emerald-100/70 blur-2xl"></span>
-    <span class="absolute -right-20 top-[46rem] h-56 w-56 rounded-full bg-violet-100/70 blur-2xl"></span>
-    <div class="absolute -left-4 top-28 hidden h-[24rem] w-32 xl:block">
-        <svg viewBox="0 0 120 360" class="h-full w-full" fill="none" aria-hidden="true">
-            <path d="M60 360C58 280 68 200 52 120S56 30 60 0" stroke="#A5B4FC" stroke-width="3" stroke-linecap="round"/>
-            <ellipse cx="38" cy="300" rx="26" ry="11" transform="rotate(-35 38 300)" fill="#C7D2FE" fill-opacity=".8"/>
-            <ellipse cx="82" cy="262" rx="26" ry="11" transform="rotate(35 82 262)" fill="#A7F3D0" fill-opacity=".8"/>
-            <ellipse cx="36" cy="214" rx="24" ry="10" transform="rotate(-35 36 214)" fill="#DDD6FE" fill-opacity=".85"/>
-            <ellipse cx="78" cy="170" rx="24" ry="10" transform="rotate(35 78 170)" fill="#C7D2FE" fill-opacity=".8"/>
-            <ellipse cx="34" cy="124" rx="22" ry="9" transform="rotate(-35 34 124)" fill="#A7F3D0" fill-opacity=".8"/>
-            <ellipse cx="74" cy="80" rx="20" ry="8" transform="rotate(35 74 80)" fill="#DDD6FE" fill-opacity=".85"/>
-            <ellipse cx="58" cy="28" rx="14" ry="7" transform="rotate(-70 58 28)" fill="#C7D2FE" fill-opacity=".8"/>
-        </svg>
-    </div>
-    <div class="absolute -right-4 top-72 hidden h-[24rem] w-32 -scale-x-100 xl:block">
-        <svg viewBox="0 0 120 360" class="h-full w-full" fill="none" aria-hidden="true">
-            <path d="M60 360C58 280 68 200 52 120S56 30 60 0" stroke="#A5B4FC" stroke-width="3" stroke-linecap="round"/>
-            <ellipse cx="38" cy="300" rx="26" ry="11" transform="rotate(-35 38 300)" fill="#C7D2FE" fill-opacity=".8"/>
-            <ellipse cx="82" cy="262" rx="26" ry="11" transform="rotate(35 82 262)" fill="#A7F3D0" fill-opacity=".8"/>
-            <ellipse cx="36" cy="214" rx="24" ry="10" transform="rotate(-35 36 214)" fill="#DDD6FE" fill-opacity=".85"/>
-            <ellipse cx="78" cy="170" rx="24" ry="10" transform="rotate(35 78 170)" fill="#C7D2FE" fill-opacity=".8"/>
-            <ellipse cx="34" cy="124" rx="22" ry="9" transform="rotate(-35 34 124)" fill="#A7F3D0" fill-opacity=".8"/>
-            <ellipse cx="74" cy="80" rx="20" ry="8" transform="rotate(35 74 80)" fill="#DDD6FE" fill-opacity=".85"/>
-            <ellipse cx="58" cy="28" rx="14" ry="7" transform="rotate(-70 58 28)" fill="#C7D2FE" fill-opacity=".8"/>
-        </svg>
-    </div>
-</div>
+<div class="relative min-h-[calc(100vh-4rem)] overflow-hidden">
+@include('partials.dekor.gaya')
+@include('partials.dekor.peta')
+@include('partials.dekor.pertanyaan')
+@include('partials.dekor.langkah')
+@include('partials.dekor.tenang')
 <main class="relative z-10 mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
 
-    {{-- Progres hanya tampil di layar pertanyaan (1/3) dan langkah (2/3). Layar ke-3 adalah Ruang Tenang. --}}
-    <div id="progress" hidden class="mb-8 flex items-center gap-4">
-        <div class="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-200"
-             role="progressbar" aria-label="Progres" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1" id="progress-track">
-            <div id="progress-bar" class="h-full rounded-full bg-indigo-950 transition-all duration-300" style="width: 33.33%"></div>
+    <div id="progress" hidden class="mb-8">
+        <div class="flex items-center justify-between text-xs font-bold">
+            <span id="progress-label" class="text-indigo-700">Pertanyaan singkat</span>
+            <span id="progress-counter" class="text-slate-500">1/3</span>
         </div>
-        <span id="progress-counter" class="text-xs font-bold text-slate-500">1/3</span>
+        <div class="mt-2 h-2 overflow-hidden rounded-full bg-white shadow-inner ring-1 ring-slate-200"
+             role="progressbar" aria-label="Progres" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1" id="progress-track">
+            <div id="progress-bar" class="h-full rounded-full bg-linear-to-r from-indigo-500 to-violet-500 transition-all duration-500" style="width: 33.33%"></div>
+        </div>
     </div>
 
     <noscript>
@@ -52,7 +30,6 @@
         </p>
     </noscript>
 
-    {{-- Asesmen tidak ditemukan (kedaluwarsa, data browser dihapus, atau pindah perangkat) --}}
     <section id="state-kosong" hidden class="rounded-4xl bg-white p-8 text-center shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-12">
         <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-3xl text-slate-500">
             <i class='bx bx-error-circle'></i>
@@ -67,7 +44,6 @@
         </a>
     </section>
 
-    {{-- ============ LAYAR 5: PETA KONDISIKU ============ --}}
     <section id="layar-peta" hidden class="lg:-mx-24">
         @include('partials.banner-bantuan', ['support' => $support])
 
@@ -92,7 +68,7 @@
         </p>
 
         <div id="peta-kotak" class="mt-6 grid gap-4 sm:grid-cols-2">
-            <div class="rounded-3xl bg-gradient-to-br from-rose-50 to-white p-5 sm:row-span-3 shadow-sm ring-1 ring-rose-100 sm:p-6">
+            <div class="rounded-3xl bg-linear-to-br from-rose-50 to-white p-5 sm:row-span-3 shadow-sm ring-1 ring-rose-100 sm:p-6">
                 <div class="flex items-start gap-3">
                     <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-xl text-rose-600"><i class='bx bx-pulse'></i></span>
                     <div>
@@ -102,7 +78,7 @@
                 </div>
                 <ul id="peta-terjadi" class="mt-4 space-y-3 text-sm text-slate-700"></ul>
             </div>
-            <div class="rounded-3xl bg-gradient-to-br from-emerald-50 to-white p-5 shadow-sm ring-1 ring-emerald-100 sm:p-6">
+            <div class="rounded-3xl bg-linear-to-br from-emerald-50 to-white p-5 shadow-sm ring-1 ring-emerald-100 sm:p-6">
                 <div class="flex items-start gap-3">
                     <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-xl text-emerald-600"><i class='bx bx-bulb'></i></span>
                     <div>
@@ -112,7 +88,7 @@
                 </div>
                 <ul id="peta-sekarang" class="mt-4 space-y-2 text-sm text-slate-700"></ul>
             </div>
-            <div class="rounded-3xl bg-gradient-to-br from-sky-50 to-white p-5 shadow-sm ring-1 ring-sky-100 sm:p-6">
+            <div class="rounded-3xl bg-linear-to-br from-sky-50 to-white p-5 shadow-sm ring-1 ring-sky-100 sm:p-6">
                 <div class="flex items-start gap-3">
                     <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky-100 text-xl text-sky-600"><i class='bx bx-hourglass'></i></span>
                     <div>
@@ -122,7 +98,7 @@
                 </div>
                 <ul id="peta-tunggu" class="mt-4 space-y-2 text-sm text-slate-700"></ul>
             </div>
-            <div class="rounded-3xl bg-gradient-to-br from-violet-50 to-white p-5 shadow-sm ring-1 ring-violet-100 sm:p-6">
+            <div class="rounded-3xl bg-linear-to-br from-violet-50 to-white p-5 shadow-sm ring-1 ring-violet-100 sm:p-6">
                 <div class="flex items-start gap-3">
                     <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-xl text-violet-600"><i class='bx bx-show'></i></span>
                     <div>
@@ -141,21 +117,26 @@
         <ul id="daftar-mode" class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4"></ul>
     </section>
 
-    {{-- ============ LAYAR 6: PERTANYAAN MODE ============ --}}
-    <section id="layar-pertanyaan" hidden>
-        <h1 id="q-judul" tabindex="-1" class="text-3xl font-extrabold tracking-tight text-indigo-950 focus:outline-none"></h1>
-        <p id="q-bantu" class="mt-2 text-sm text-slate-600"></p>
+    <section id="layar-pertanyaan" class="mw-rise" hidden>
+        <div class="flex items-start gap-4">
+            <span id="q-ikon" class="mw-float flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-3xl text-white shadow-lg"></span>
+            <div>
+                <p id="q-mode" class="text-xs font-bold tracking-wide"></p>
+                <h1 id="q-judul" tabindex="-1" class="mt-0.5 text-3xl font-extrabold tracking-tight text-indigo-950 focus:outline-none"></h1>
+                <p id="q-bantu" class="mt-1 text-sm text-slate-600"></p>
+            </div>
+        </div>
 
         <ul id="q-opsi" class="mt-6 space-y-3"></ul>
 
         <div class="mt-8 flex flex-col-reverse gap-3 min-[380px]:flex-row min-[380px]:items-start min-[380px]:justify-between">
             <button type="button" id="q-kembali"
-                    class="inline-flex h-12 min-w-[9.5rem] items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
+                    class="inline-flex h-12 min-w-38 items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
                 <i class='bx bx-left-arrow-alt text-xl'></i> Kembali
             </button>
             <div class="flex flex-col items-stretch gap-1 min-[380px]:items-end">
                 <button type="button" id="q-lanjut" disabled
-                        class="inline-flex h-12 min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-indigo-950 px-6 text-sm font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:hover:bg-indigo-950">
+                        class="inline-flex h-12 min-w-38 items-center justify-center gap-2 rounded-full bg-indigo-950 px-6 text-sm font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:hover:bg-indigo-950">
                     Lanjut <i class='bx bx-right-arrow-alt text-xl'></i>
                 </button>
                 <p class="text-xs text-slate-500">Pilih satu</p>
@@ -163,15 +144,19 @@
         </div>
     </section>
 
-    {{-- ============ LAYAR 7: REKOMENDASI LANGKAH KECIL ============ --}}
-    <section id="layar-langkah" hidden>
-        <h1 id="l-judul" tabindex="-1" class="text-3xl font-extrabold tracking-tight text-indigo-950 focus:outline-none"></h1>
-        <p id="l-intro" class="mt-2 text-sm text-slate-600"></p>
+    <section id="layar-langkah" class="mw-rise" hidden>
+        <div class="flex items-start gap-4">
+            <span id="l-ikon" class="mw-float flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-3xl text-white shadow-lg"></span>
+            <div>
+                <p id="l-mode" class="text-xs font-bold tracking-wide"></p>
+                <h1 id="l-judul" tabindex="-1" class="mt-0.5 text-3xl font-extrabold tracking-tight text-indigo-950 focus:outline-none"></h1>
+                <p id="l-intro" class="mt-1 text-sm text-slate-600"></p>
+            </div>
+        </div>
 
         <ol id="l-daftar" class="mt-6 space-y-3"></ol>
 
-        {{-- Hanya tampil di mode Bantuan. Isinya kontak is_verified; kalau belum ada, teks umum tanpa nomor. --}}
-        <div id="daftar-layanan" hidden class="mt-6 rounded-2xl bg-white p-5 ring-1 ring-slate-100">
+            <div id="daftar-layanan" hidden class="mt-6 rounded-2xl bg-white p-5 ring-1 ring-slate-100">
             <h2 class="flex items-center gap-2 text-sm font-bold text-indigo-950">
                 <i class='bx bx-support text-lg text-indigo-600'></i> Layanan yang bisa kamu hubungi
             </h2>
@@ -199,12 +184,12 @@
 
         <div class="mt-8 flex flex-col-reverse gap-3 min-[380px]:flex-row min-[380px]:items-start min-[380px]:justify-between">
             <button type="button" id="l-kembali"
-                    class="inline-flex h-12 min-w-[9.5rem] items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
+                    class="inline-flex h-12 min-w-38 items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
                 <i class='bx bx-left-arrow-alt text-xl'></i> Kembali
             </button>
             <div class="flex flex-col items-stretch gap-1 min-[380px]:items-end">
                 <button type="button" id="l-pilih" disabled
-                        class="inline-flex h-12 min-w-[9.5rem] items-center justify-center gap-2 rounded-full bg-indigo-950 px-6 text-sm font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:hover:bg-indigo-950">
+                        class="inline-flex h-12 min-w-38 items-center justify-center gap-2 rounded-full bg-indigo-950 px-6 text-sm font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none disabled:hover:bg-indigo-950">
                     Pilih Langkah Ini <i class='bx bx-right-arrow-alt text-xl'></i>
                 </button>
                 <p class="text-xs text-slate-500">Pilih satu langkah</p>
@@ -212,30 +197,34 @@
         </div>
     </section>
 
-    {{-- ============ LAYAR 8: RUANG TENANG ============ --}}
-    <section id="layar-penutup" hidden>
-        <div class="rounded-4xl bg-white p-8 text-center shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-12">
-            <div class="relative mx-auto flex h-36 w-36 items-center justify-center" aria-hidden="true">
-                <span class="absolute inset-0 rounded-full bg-indigo-100"></span>
-                <span class="absolute -top-1 right-2 h-7 w-7 rounded-full bg-amber-200"></span>
-                <span class="absolute bottom-2 -left-2 h-5 w-5 rounded-full bg-violet-200"></span>
-                <i class='bx bx-leaf relative text-6xl text-indigo-500'></i>
-            </div>
+    <section id="layar-penutup" class="mw-rise" hidden>
+        <div class="relative overflow-hidden rounded-4xl bg-linear-to-b from-indigo-50 via-white to-violet-50 p-8 text-center shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-12">
+            <span class="mw-twinkle absolute left-8 top-10 h-2 w-2 rounded-full bg-amber-300" aria-hidden="true"></span>
+            <span class="mw-twinkle absolute right-10 top-16 h-2.5 w-2.5 rounded-full bg-violet-300 [animation-delay:1.5s]" aria-hidden="true"></span>
+            <span class="mw-twinkle absolute bottom-24 left-12 hidden h-2 w-2 sm:block rounded-full bg-sky-300 [animation-delay:2.5s]" aria-hidden="true"></span>
+            <span class="mw-twinkle absolute bottom-32 right-14 hidden h-1.5 w-1.5 sm:block rounded-full bg-emerald-300 [animation-delay:3s]" aria-hidden="true"></span>
 
-            <h1 id="p-judul" tabindex="-1" class="mt-6 text-2xl font-extrabold tracking-tight text-balance text-indigo-950 focus:outline-none sm:text-3xl"></h1>
+            <div class="relative mx-auto flex h-64 w-64 items-center justify-center sm:h-72 sm:w-72" aria-hidden="true">
+                <span class="mw-breathe absolute inset-4 rounded-full bg-indigo-100/70"></span>
+                <span class="mw-breathe absolute inset-10 rounded-full bg-violet-100/70 [animation-delay:.6s]"></span>
+                <img src="{{ asset('img/ruang-tenang.svg') }}" alt="" class="mw-float relative h-full w-full object-contain">
+            </div>
+            <p class="mt-3 text-xs font-bold tracking-wide text-indigo-400" aria-hidden="true">TARIK NAPAS PELAN, LALU HEMBUSKAN</p>
+
+            <h1 id="p-judul" tabindex="-1" class="mt-5 text-2xl font-extrabold tracking-tight text-balance text-indigo-950 focus:outline-none sm:text-3xl"></h1>
             <p id="p-pesan" class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-600"></p>
 
             <div class="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
                 <button type="button" id="p-selesai"
-                        class="inline-flex h-12 w-full items-center justify-center rounded-full bg-indigo-950 px-8 text-sm font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 sm:w-auto sm:min-w-[9.5rem]">
+                        class="inline-flex h-12 w-full items-center justify-center rounded-full bg-linear-to-r from-indigo-950 to-indigo-700 px-8 text-sm font-bold text-white shadow-lg shadow-indigo-900/25 transition hover:from-indigo-900 hover:to-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 sm:w-auto sm:min-w-38">
                     Selesai
                 </button>
                 <button type="button" id="p-berat"
-                        class="inline-flex h-12 w-full items-center justify-center rounded-full border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 sm:w-auto sm:min-w-[9.5rem]">
+                        class="inline-flex h-12 w-full items-center justify-center rounded-full border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 sm:w-auto sm:min-w-38">
                     Masih berat
                 </button>
                 <button type="button" id="p-istirahat"
-                        class="inline-flex h-12 w-full items-center justify-center rounded-full border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 sm:w-auto sm:min-w-[9.5rem]">
+                        class="inline-flex h-12 w-full items-center justify-center rounded-full border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 sm:w-auto sm:min-w-38">
                     Aku mau istirahat dulu
                 </button>
             </div>
@@ -256,7 +245,6 @@ document.addEventListener('DOMContentLoaded', function () {
     var data = JSON.parse(document.getElementById('peta-data').textContent);
     var $ = function (id) { return document.getElementById(id); };
 
-    // ---------- Ambil asesmen: id di URL -> hash cadangan -> yang terbaru ----------
     var params = new URLSearchParams(window.location.search);
     var id = params.get('id');
     var record = Mindway.getAssessment(id);
@@ -269,11 +257,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!record) {
         $('state-kosong').hidden = false;
+        showDekor('peta');
         return;
     }
     $('info-simpan').hidden = false;
 
-    // ---------- Layar ----------
+    function showDekor(name) {
+        Array.prototype.forEach.call(document.querySelectorAll('[data-dekor]'), function (d) {
+            d.hidden = d.getAttribute('data-dekor') !== name;
+        });
+    }
+
     var screens = { peta: $('layar-peta'), pertanyaan: $('layar-pertanyaan'), langkah: $('layar-langkah'), penutup: $('layar-penutup') };
     var progressStep = { pertanyaan: 1, langkah: 2 };
 
@@ -281,9 +275,10 @@ document.addEventListener('DOMContentLoaded', function () {
         Object.keys(screens).forEach(function (k) { screens[k].hidden = k !== name; });
 
         var n = progressStep[name];
-        $('dekor').hidden = name !== 'peta';
+        showDekor(name === 'penutup' ? 'tenang' : name);
         $('progress').hidden = !n;
         if (n) {
+            $('progress-label').textContent = n === 1 ? 'Pertanyaan singkat' : 'Langkah kecil';
             $('progress-bar').style.width = (n / 3 * 100) + '%';
             $('progress-track').setAttribute('aria-valuenow', n);
             $('progress-counter').textContent = n + '/3';
@@ -294,8 +289,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ---------- Penyimpanan: hanya memperbarui asesmen yang memang sudah tersimpan ----------
-    // (kalau hasil datang dari #hash karena localStorage gagal, tidak ada yang disimpan)
     function persistAction(action) {
         if (!Mindway.getAssessment(record.id)) return false;
         return Mindway.saveAssessment({ id: record.id, action: action });
@@ -303,7 +296,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var state = { mode: null, optionIndex: null, planSlug: null, plan: null, step: null };
 
-    // ---------- Pembantu DOM ----------
     function el(tag, cls, text) {
         var e = document.createElement(tag);
         if (cls) e.className = cls;
@@ -317,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return li;
     }
     function radioRow(name, value, onChange) {
-        var label = el('label', 'flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-4 text-sm font-medium text-slate-700 transition hover:border-indigo-300 has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50');
+        var label = el('label', 'flex cursor-pointer items-center gap-3 rounded-2xl border-2 border-transparent bg-white px-5 py-4 text-sm font-medium text-slate-700 shadow-sm ring-1 ring-slate-100 transition hover:-translate-y-0.5 hover:shadow-md has-[:checked]:border-indigo-500 has-[:checked]:bg-indigo-50 has-[:checked]:shadow-md');
         var input = el('input', 'peer sr-only');
         input.type = 'radio';
         input.name = name;
@@ -329,7 +321,17 @@ document.addEventListener('DOMContentLoaded', function () {
         return { label: label, input: input };
     }
 
-    // ---------- LAYAR 5: Peta Kondisiku ----------
+    function paintHeader(prefix, mode) {
+        var tile = $(prefix + '-ikon');
+        tile.style.background = 'linear-gradient(135deg, ' + mode.color + ', ' + mode.color + 'bb)';
+        tile.style.boxShadow = '0 10px 20px -6px ' + mode.color + '66';
+        tile.textContent = '';
+        tile.appendChild(el('i', 'bx ' + mode.icon));
+        var label = $(prefix + '-mode');
+        label.textContent = mode.title.toUpperCase();
+        label.style.color = mode.color;
+    }
+
     function renderPeta() {
         var results = record.results.filter(function (r) { return data.patterns[r.patternSlug]; });
         var top = results.length ? data.patterns[results[0].patternSlug] : null;
@@ -353,7 +355,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 li.appendChild(text);
                 $('peta-terjadi').appendChild(li);
             });
-            // tiga kotak lainnya mengikuti pola dengan skor tertinggi
             $('peta-sekarang').appendChild(bullet(top.nowAction, 'bg-emerald-500'));
             $('peta-tunggu').appendChild(bullet(top.canWait, 'bg-sky-500'));
             $('peta-perhatian').appendChild(bullet(top.watchNote, 'bg-violet-500'));
@@ -362,7 +363,6 @@ document.addEventListener('DOMContentLoaded', function () {
             $('peta-kosong').hidden = false;
         }
 
-        // Kalau ada tanda keselamatan, mode Bantuan ditaruh paling depan dan diberi tanda.
         var modes = data.modes.slice();
         if (record.hasRedFlag) {
             modes.sort(function (a, b) { return (b.slug === 'bantuan') - (a.slug === 'bantuan'); });
@@ -388,12 +388,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // ---------- LAYAR 6: pertanyaan mode ----------
     function startMode(mode) {
         state = { mode: mode, optionIndex: null, planSlug: null, plan: null, step: null };
 
         if (!mode.question || !mode.question.options.length) {
-            // mode tanpa pertanyaan: langsung ke rencana pertama
             var first = Object.keys(mode.plans)[0];
             if (!first) return;
             openPlan(first);
@@ -405,6 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function renderQuestion() {
         var q = state.mode.question;
+        paintHeader('q', state.mode);
         $('q-judul').textContent = q.prompt;
         $('q-bantu').textContent = q.helper || '';
         $('q-bantu').hidden = !q.helper;
@@ -434,7 +433,6 @@ document.addEventListener('DOMContentLoaded', function () {
         openPlan(slug);
     });
 
-    // ---------- LAYAR 7: langkah kecil ----------
     var stepColors = ['bg-sky-500', 'bg-amber-500', 'bg-emerald-500', 'bg-indigo-500', 'bg-violet-500'];
 
     function openPlan(slug) {
@@ -447,6 +445,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function renderSteps() {
         var plan = state.plan;
+        paintHeader('l', state.mode);
         $('l-judul').textContent = plan.title;
         $('l-intro').textContent = plan.intro;
         $('daftar-layanan').hidden = state.mode.slug !== 'bantuan';
@@ -493,7 +492,6 @@ document.addEventListener('DOMContentLoaded', function () {
         go('penutup');
     });
 
-    // ---------- LAYAR 8: Ruang Tenang ----------
     function finish(outcome) {
         persistAction({
             modeSlug: state.mode.slug,
@@ -504,12 +502,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (outcome === 'masih_berat') {
-            // kembali ke peta supaya bisa memilih bantuan lain
             $('catatan-berat').hidden = false;
             go('peta');
             return;
         }
-        // Selesai -> lihat petanya tersimpan di Riwayat; Istirahat dulu -> beranda tanpa tuntutan apa pun
         window.location.href = outcome === 'selesai'
             ? data.riwayatUrl + '?id=' + encodeURIComponent(record.id)
             : data.homeUrl;
@@ -518,7 +514,6 @@ document.addEventListener('DOMContentLoaded', function () {
     $('p-berat').addEventListener('click', function () { finish('masih_berat'); });
     $('p-istirahat').addEventListener('click', function () { finish('istirahat_dulu'); });
 
-    // ---------- Mulai ----------
     renderPeta();
     go('peta');
 });

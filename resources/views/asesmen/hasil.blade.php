@@ -5,7 +5,10 @@
 @endsection
 
 @section('container')
-<main class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+<div class="relative min-h-[calc(100vh-4rem)] overflow-hidden">
+@include('partials.dekor.gaya')
+@include('partials.dekor.hasil')
+<main class="relative z-10 mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
 
     <noscript>
         <p class="rounded-2xl bg-amber-50 p-4 text-sm text-amber-900 ring-1 ring-amber-200">
@@ -13,7 +16,7 @@
         </p>
     </noscript>
 
-    <section id="state-kosong" hidden class="rounded-4xl bg-white p-8 text-center shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-12">
+    <section id="state-kosong" hidden class="mw-rise rounded-4xl bg-white p-8 text-center shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-12">
         <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-3xl text-slate-500">
             <i class='bx bx-error-circle'></i>
         </span>
@@ -27,48 +30,55 @@
         </a>
     </section>
 
-    <section id="state-hasil" hidden>
+    <section id="state-hasil" class="mw-rise" hidden>
 
         @include('partials.banner-bantuan', ['support' => $support])
 
-        <div class="rounded-4xl bg-white p-6 shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-10">
-            <h1 tabindex="-1" class="text-2xl font-extrabold tracking-tight text-indigo-950 focus:outline-none sm:text-3xl">
-                Yang paling kelihatan dari jawabanmu...
-            </h1>
-            <p id="hasil-subjudul" class="mt-2 text-sm text-slate-600"></p>
-
-            <div id="hasil-panel" class="mt-6 rounded-3xl bg-indigo-50 p-5 sm:p-6">
-                <h2 id="hasil-judul-pola" class="font-bold text-indigo-950"></h2>
-                <ul id="hasil-pola" class="mt-4 grid gap-3 sm:grid-cols-3"></ul>
-                <p id="hasil-penutup" class="mt-5 text-sm text-slate-600"></p>
+        <div class="flex items-start gap-4">
+            <span class="mw-float flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-300 to-rose-400 text-3xl text-white shadow-lg shadow-rose-200/70">
+                <i class='bx bx-bulb'></i>
+            </span>
+            <div>
+                <h1 tabindex="-1" class="text-2xl font-extrabold tracking-tight text-indigo-950 focus:outline-none sm:text-3xl">
+                    Yang paling kelihatan dari jawabanmu...
+                </h1>
+                <p id="hasil-subjudul" class="mt-1 text-sm text-slate-600"></p>
             </div>
-
-            <a id="btn-saran" href="{{ $payload['nextUrl'] }}"
-               class="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-indigo-950 px-8 py-4 text-center text-sm font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
-                Lihat Saran &amp; Langkah Selanjutnya <i class='bx bx-right-arrow-alt text-xl'></i>
-            </a>
-
-            <div class="mt-4 text-center">
-                <a href="{{ $payload['startUrl'] }}" class="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-800 hover:underline">
-                    <i class='bx bx-refresh text-lg'></i> Ulangi asesmen
-                </a>
-            </div>
-
-            <p id="info-simpan" hidden class="mt-6 flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-slate-500">
-                <i class='bx bx-lock-alt mt-0.5 text-base'></i>
-                <span>Hasil ini tersimpan di browser ini selama 30 hari dan tidak dikirim ke server.</span>
-            </p>
-            <p id="info-tidak-simpan" hidden class="mt-6 flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-amber-800">
-                <i class='bx bx-info-circle mt-0.5 text-base'></i>
-                <span>Browser ini tidak mengizinkan penyimpanan, jadi hasil ini tidak masuk riwayat. Simpan halaman ini kalau kamu ingin membukanya lagi.</span>
-            </p>
         </div>
+
+        <div id="hasil-panel" class="relative mt-6 overflow-hidden rounded-4xl bg-white p-6 shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-8">
+            <div class="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-rose-300 via-amber-300 to-violet-400"></div>
+            <h2 id="hasil-judul-pola" class="font-extrabold text-indigo-950"></h2>
+            <ul id="hasil-pola" class="mt-4 grid gap-3 sm:grid-cols-3"></ul>
+            <p id="hasil-penutup" class="mt-5 rounded-2xl bg-indigo-50 p-4 text-sm leading-relaxed text-indigo-900"></p>
+        </div>
+
+        <a id="btn-saran" href="{{ $payload['nextUrl'] }}"
+           class="group mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-indigo-950 to-indigo-700 px-8 py-4 text-center text-sm font-bold text-white shadow-lg shadow-indigo-900/25 transition hover:from-indigo-900 hover:to-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
+            Lihat Saran &amp; Langkah Selanjutnya <i class='bx bx-right-arrow-alt text-xl transition group-hover:translate-x-1'></i>
+        </a>
+
+        <div class="mt-4 text-center">
+            <a href="{{ $payload['startUrl'] }}" class="inline-flex items-center gap-1.5 text-sm font-bold text-indigo-800 hover:underline">
+                <i class='bx bx-refresh text-lg'></i> Ulangi asesmen
+            </a>
+        </div>
+
+        <p id="info-simpan" hidden class="mt-6 flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-slate-500">
+            <i class='bx bx-lock-alt mt-0.5 text-base'></i>
+            <span>Hasil ini tersimpan di browser ini selama 30 hari dan tidak dikirim ke server.</span>
+        </p>
+        <p id="info-tidak-simpan" hidden class="mt-6 flex items-start justify-center gap-2 text-center text-xs leading-relaxed text-amber-800">
+            <i class='bx bx-info-circle mt-0.5 text-base'></i>
+            <span>Browser ini tidak mengizinkan penyimpanan, jadi hasil ini tidak masuk riwayat. Simpan halaman ini kalau kamu ingin membukanya lagi.</span>
+        </p>
 
         <p class="mx-auto mt-6 max-w-md text-center text-xs leading-relaxed text-slate-500">
             Ini gambaran dari apa yang kamu pilih, bukan diagnosis.
         </p>
     </section>
 </main>
+</div>
 
 <script type="application/json" id="hasil-data">@json($payload)</script>
 <script src="{{ asset('js/mindway.js') }}"></script>
@@ -90,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
         fromHash = !!record;
     }
     if (!record && !id) record = Mindway.latestAssessment();
+
     if (record && !Array.isArray(record.results)) record = null;
 
     if (!record) {
@@ -108,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var judul = $('hasil-judul-pola');
     var penutup = $('hasil-penutup');
     var ul = $('hasil-pola');
+    ul.className = 'mt-4 grid gap-3 ' + (n === 1 ? 'mx-auto max-w-xs' : n === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-3');
 
     if (n === 0) {
         subjudul.textContent = '';
@@ -125,15 +137,23 @@ document.addEventListener('DOMContentLoaded', function () {
         penutup.textContent = 'Makanya semuanya terasa lebih berat daripada biasanya.';
     }
 
-    results.forEach(function (r) {
+    results.forEach(function (r, i) {
         var p = patterns[r.patternSlug];
 
         var li = document.createElement('li');
-        li.className = 'flex flex-col items-center rounded-2xl p-4 text-center';
-        li.style.backgroundColor = p.color + '1A';
+        li.className = 'relative flex flex-col items-center rounded-3xl border-t-4 p-4 pt-5 text-center shadow-sm';
+        li.style.backgroundColor = p.color + '14';
+        li.style.borderTopColor = p.color;
+
+        if (i === 0 && n > 1) {
+            var badge = document.createElement('span');
+            badge.className = 'absolute -top-3 rounded-full bg-indigo-950 px-2.5 py-0.5 text-[0.65rem] font-bold tracking-wide text-white';
+            badge.textContent = 'PALING MENONJOL';
+            li.appendChild(badge);
+        }
 
         var iconWrap = document.createElement('span');
-        iconWrap.className = 'flex h-12 w-12 items-center justify-center rounded-xl bg-white text-2xl shadow-sm';
+        iconWrap.className = 'flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-3xl shadow-md';
         iconWrap.style.color = p.color;
         var icon = document.createElement('i');
         icon.className = 'bx ' + p.icon;

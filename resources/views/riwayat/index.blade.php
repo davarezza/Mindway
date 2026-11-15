@@ -5,10 +5,28 @@
 @endsection
 
 @section('container')
-<main class="mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12">
+@php
+    $stats = [
+        ['id' => 'stat-jumlah',  'judul' => 'Asesmen tersimpan', 'ikon' => 'bx-folder-open', 'warna' => 'bg-violet-100 text-violet-700'],
+        ['id' => 'stat-pola',    'judul' => 'Paling sering muncul', 'ikon' => 'bx-pie-chart-alt-2', 'warna' => 'bg-sky-100 text-sky-700'],
+        ['id' => 'stat-selesai', 'judul' => 'Langkah selesai', 'ikon' => 'bx-check-circle', 'warna' => 'bg-emerald-100 text-emerald-700'],
+        ['id' => 'stat-sisa',    'judul' => 'Terhapus otomatis', 'ikon' => 'bx-time-five', 'warna' => 'bg-amber-100 text-amber-700'],
+    ];
+@endphp
 
-    <h1 tabindex="-1" class="text-3xl font-extrabold tracking-tight text-indigo-950 focus:outline-none">Peta &amp; Riwayatku</h1>
-    <p class="mt-2 text-sm text-slate-600">Hasil asesmenmu yang tersimpan di browser ini.</p>
+<div class="relative min-h-[calc(100vh-4rem)] overflow-hidden">
+@include('partials.dekor.gaya')
+@include('partials.dekor.riwayat')
+
+<main class="relative z-10 mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+
+    <header class="mw-rise max-w-xl">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-bold text-indigo-700 shadow-sm ring-1 ring-indigo-100">
+            <i class='bx bx-map-alt'></i> Tersimpan di perangkatmu
+        </span>
+        <h1 tabindex="-1" class="mt-4 text-4xl leading-tight font-extrabold tracking-tight text-indigo-950 focus:outline-none sm:text-5xl">Peta &amp; Riwayatku</h1>
+        <p class="mt-3 text-base leading-relaxed text-slate-600">Lihat apa saja yang pernah kamu isi, pola yang sering muncul, dan langkah kecil yang sudah kamu coba.</p>
+    </header>
 
     <noscript>
         <p class="mt-6 rounded-2xl bg-amber-50 p-4 text-sm text-amber-900 ring-1 ring-amber-200">
@@ -18,79 +36,114 @@
 
     <p id="pesan" role="status" aria-live="polite" hidden class="mt-6 rounded-2xl bg-indigo-50 p-4 text-sm leading-relaxed text-indigo-900 ring-1 ring-indigo-100"></p>
 
-    <section id="state-kosong" hidden class="mt-8 rounded-4xl bg-white p-8 text-center shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-12">
+    <section id="state-kosong" hidden class="mx-auto mt-10 max-w-xl rounded-4xl bg-white p-8 text-center shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-12">
         <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-50 text-3xl text-indigo-600">
             <i class='bx bx-map-alt'></i>
         </span>
         <h2 class="mt-5 text-xl font-extrabold tracking-tight text-indigo-950">Belum ada riwayat</h2>
         <p class="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-slate-600">
-            Setelah kamu menyelesaikan asesmen, petamu muncul di sini.
+            Setelah kamu menyelesaikan asesmen, petamu muncul di sini beserta ringkasannya.
         </p>
         <a href="{{ $payload['startUrl'] }}"
-           class="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-indigo-950 px-8 text-sm font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
+           class="mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-linear-to-r from-indigo-950 to-indigo-700 px-8 text-sm font-bold text-white shadow-lg shadow-indigo-900/25 transition hover:from-indigo-900 hover:to-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
             Mulai asesmen <i class='bx bx-right-arrow-alt text-xl'></i>
         </a>
     </section>
 
     <div id="state-isi" hidden>
 
-        <section class="mt-8" aria-labelledby="judul-terakhir">
-            <h2 id="judul-terakhir" class="text-lg font-extrabold text-indigo-950">Peta terakhirku</h2>
-            <div class="mt-3 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-6">
-                <p id="terakhir-tanggal" class="text-xs font-bold text-slate-400"></p>
-                <ul id="terakhir-pola" class="mt-3 flex flex-wrap gap-2"></ul>
-                <p id="terakhir-tanpa-pola" hidden class="mt-3 text-sm text-slate-600">Belum ada pola yang menonjol dari jawabanmu.</p>
-                <p id="terakhir-sekarang" class="mt-4 rounded-2xl bg-emerald-50 p-4 text-sm leading-relaxed text-slate-700 ring-1 ring-emerald-100"></p>
-                <div class="mt-5 flex flex-col gap-3 sm:flex-row">
-                    <a id="terakhir-peta" href="#"
-                       class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-indigo-950 px-6 text-sm font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
-                        Buka peta lengkap <i class='bx bx-right-arrow-alt text-xl'></i>
-                    </a>
-                    <a href="{{ $payload['startUrl'] }}"
-                       class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
-                        <i class='bx bx-refresh text-lg'></i> Asesmen baru
-                    </a>
-                </div>
-            </div>
+        <section class="mt-8" aria-labelledby="judul-ringkasan">
+            <h2 id="judul-ringkasan" class="sr-only">Ringkasan</h2>
+            <ul class="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+                @foreach ($stats as $st)
+                    <li class="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-100 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-100 sm:p-5">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-2xl text-xl {{ $st['warna'] }}"><i class='bx {{ $st['ikon'] }}'></i></span>
+                        <p class="mt-3 text-xs font-bold text-slate-500">{{ $st['judul'] }}</p>
+                        <p id="{{ $st['id'] }}" class="mt-0.5 text-xl leading-snug font-extrabold text-indigo-950 sm:text-2xl"></p>
+                        <p id="{{ $st['id'] }}-sub" class="mt-0.5 text-xs leading-relaxed text-slate-500"></p>
+                    </li>
+                @endforeach
+            </ul>
         </section>
 
-        <section class="mt-10" aria-labelledby="judul-riwayat">
-            <div class="flex items-baseline justify-between gap-3">
-                <h2 id="judul-riwayat" class="text-lg font-extrabold text-indigo-950">Riwayat</h2>
-                <span id="hitung" class="text-xs font-bold text-slate-400"></span>
+        <div class="mt-10 grid gap-8 lg:grid-cols-3 lg:gap-10">
+            <div class="lg:col-span-2">
+
+                <section aria-labelledby="judul-terakhir">
+                    <h2 id="judul-terakhir" class="flex items-center gap-2 text-lg font-extrabold text-indigo-950"><i class='bx bx-map-pin text-xl text-indigo-600'></i> Peta terakhirku</h2>
+                    <div class="relative mt-3 overflow-hidden rounded-4xl bg-linear-to-br from-indigo-50 via-white to-violet-50 p-5 shadow-xl shadow-indigo-100/60 ring-1 ring-slate-100 sm:p-7">
+                        <p id="terakhir-tanggal" class="text-xs font-bold text-slate-400"></p>
+                        <ul id="terakhir-pola" class="mt-3 flex flex-wrap gap-2"></ul>
+                        <p id="terakhir-tanpa-pola" hidden class="mt-3 text-sm text-slate-600">Belum ada pola yang menonjol dari jawabanmu.</p>
+                        <p id="terakhir-sekarang" class="mt-4 rounded-2xl bg-emerald-50 p-4 text-sm leading-relaxed text-slate-700 ring-1 ring-emerald-100"></p>
+                        <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+                            <a id="terakhir-peta" href="#"
+                               class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-linear-to-r from-indigo-950 to-indigo-700 px-6 text-sm font-bold text-white shadow-lg shadow-indigo-900/25 transition hover:from-indigo-900 hover:to-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
+                                Buka peta lengkap <i class='bx bx-right-arrow-alt text-xl'></i>
+                            </a>
+                            <a href="{{ $payload['startUrl'] }}"
+                               class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-slate-300 bg-white px-6 text-sm font-bold text-slate-700 transition hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
+                                <i class='bx bx-refresh text-lg'></i> Asesmen baru
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="mt-10" aria-labelledby="judul-riwayat">
+                    <div class="flex items-baseline justify-between gap-3">
+                        <h2 id="judul-riwayat" class="flex items-center gap-2 text-lg font-extrabold text-indigo-950"><i class='bx bx-history text-xl text-indigo-600'></i> Riwayat</h2>
+                        <span id="hitung" class="text-xs font-bold text-slate-400"></span>
+                    </div>
+                    <ul id="daftar" class="mt-3 space-y-3"></ul>
+                </section>
             </div>
-            <ul id="daftar" class="mt-3 space-y-3"></ul>
-        </section>
 
-        <section class="mt-10 rounded-3xl bg-white p-5 ring-1 ring-slate-100 sm:p-6" aria-labelledby="judul-data">
-            <h2 id="judul-data" class="flex items-center gap-2 text-sm font-bold text-indigo-950">
-                <i class='bx bx-file text-lg text-indigo-600'></i> Simpan riwayatmu
-            </h2>
-            <p class="mt-2 text-sm leading-relaxed text-slate-600">
-                Riwayat hanya ada di browser ini. Hanya <span id="batas-jumlah">5</span> asesmen terakhir yang disimpan, selama <span id="batas-hari">30</span> hari,
-                dan hilang kalau data browser dihapus atau kamu pindah perangkat. Download sebagai PDF kalau ingin menyimpannya lebih lama.
-            </p>
+            <aside class="space-y-6 lg:col-span-1" aria-label="Ringkasan dan penyimpanan">
 
-            <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <button type="button" id="btn-download"
-                        class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-indigo-950 px-6 text-sm font-bold text-white transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
-                    <i class='bx bx-download text-lg'></i> <span id="btn-download-teks">Download PDF</span>
-                </button>
+                <section class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-6" aria-labelledby="judul-pola">
+                    <h2 id="judul-pola" class="flex items-center gap-2 text-sm font-extrabold text-indigo-950"><i class='bx bx-bar-chart-alt-2 text-lg text-indigo-600'></i> Pola yang sering muncul</h2>
+                    <ul id="pola-bar" class="mt-4 space-y-3"></ul>
+                    <p id="pola-catatan" class="mt-4 text-xs leading-relaxed text-slate-500"></p>
+                </section>
 
-                <div id="hapus-semua-wrap" class="sm:ml-auto">
-                    <button type="button" id="btn-hapus-semua"
-                            class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full border border-rose-200 bg-white px-6 text-sm font-bold text-rose-700 transition hover:bg-rose-50 focus-visible:ring-2 focus-visible:ring-rose-300 focus-visible:ring-offset-2 sm:w-auto">
-                        <i class='bx bx-trash text-lg'></i> Hapus semua
-                    </button>
-                </div>
-            </div>
-            <p class="mt-4 flex items-start gap-2 text-xs leading-relaxed text-slate-500">
-                <i class='bx bx-lock-alt mt-0.5 text-base'></i>
-                <span>PDF dibuat di perangkatmu dan tidak dikirim ke server.</span>
-            </p>
-        </section>
+                <section class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100 sm:p-6" aria-labelledby="judul-langkah">
+                    <h2 id="judul-langkah" class="flex items-center gap-2 text-sm font-extrabold text-indigo-950"><i class='bx bx-target-lock text-lg text-indigo-600'></i> Langkah kecilmu</h2>
+                    <ul id="langkah-ringkas" class="mt-4 space-y-2"></ul>
+                    <p id="mode-favorit" class="mt-4 text-xs leading-relaxed text-slate-500"></p>
+                </section>
+
+                <section class="rounded-3xl bg-white p-5 ring-1 ring-slate-100 sm:p-6" aria-labelledby="judul-data">
+                    <h2 id="judul-data" class="flex items-center gap-2 text-sm font-extrabold text-indigo-950">
+                        <i class='bx bx-file text-lg text-indigo-600'></i> Simpan riwayatmu
+                    </h2>
+                    <p class="mt-2 text-sm leading-relaxed text-slate-600">
+                        Riwayat hanya ada di browser ini. Hanya <span id="batas-jumlah">5</span> asesmen terakhir yang disimpan, selama <span id="batas-hari">30</span> hari,
+                        dan hilang kalau data browser dihapus atau kamu pindah perangkat. Download sebagai PDF kalau ingin menyimpannya lebih lama.
+                    </p>
+
+                    <div class="mt-4 flex flex-col gap-3">
+                        <button type="button" id="btn-download"
+                                class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-linear-to-r from-indigo-950 to-indigo-700 px-6 text-sm font-bold text-white shadow-lg shadow-indigo-900/25 transition hover:from-indigo-900 hover:to-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60">
+                            <i class='bx bx-download text-lg'></i> <span id="btn-download-teks">Download PDF</span>
+                        </button>
+
+                        <div id="hapus-semua-wrap">
+                            <button type="button" id="btn-hapus-semua"
+                                    class="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full border border-rose-200 bg-white px-6 text-sm font-bold text-rose-700 transition hover:bg-rose-50 focus-visible:ring-2 focus-visible:ring-rose-300 focus-visible:ring-offset-2">
+                                <i class='bx bx-trash text-lg'></i> Hapus semua
+                            </button>
+                        </div>
+                    </div>
+                    <p class="mt-4 flex items-start gap-2 text-xs leading-relaxed text-slate-500">
+                        <i class='bx bx-lock-alt mt-0.5 text-base'></i>
+                        <span>PDF dibuat di perangkatmu dan tidak dikirim ke server.</span>
+                    </p>
+                </section>
+            </aside>
+        </div>
     </div>
 </main>
+</div>
 
 <script type="application/json" id="riwayat-data">@json($payload)</script>
 <script src="{{ asset('js/mindway.js') }}"></script>
@@ -160,6 +213,100 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function q(rec) { return '?id=' + encodeURIComponent(rec.id); }
 
+
+    function renderRingkasan(list) {
+        var counts = {}, order = [];
+        var outcomes = { selesai: 0, masih_berat: 0, istirahat_dulu: 0, belum: 0 };
+        var modes = {}, modeOrder = [], dipilih = 0;
+
+        list.forEach(function (rec) {
+            knownResults(rec).forEach(function (r) {
+                if (!counts[r.patternSlug]) { counts[r.patternSlug] = 0; order.push(r.patternSlug); }
+                counts[r.patternSlug]++;
+            });
+            var a = rec.action;
+            if (a && data.modes[a.modeSlug]) {
+                if (!modes[a.modeSlug]) { modes[a.modeSlug] = 0; modeOrder.push(a.modeSlug); }
+                modes[a.modeSlug]++;
+                if (a.outcome && outcomes.hasOwnProperty(a.outcome)) { outcomes[a.outcome]++; dipilih++; }
+                else outcomes.belum++;
+            } else {
+                outcomes.belum++;
+            }
+        });
+
+        var ranked = order.slice().sort(function (a, b) { return counts[b] - counts[a]; });
+        var total = list.length;
+
+        $('stat-jumlah').textContent = total;
+        $('stat-jumlah-sub').textContent = 'dari maksimal ' + Mindway.MAX_ASSESSMENTS;
+        if (ranked.length) {
+            $('stat-pola').textContent = data.patterns[ranked[0]].title;
+            $('stat-pola-sub').textContent = 'di ' + counts[ranked[0]] + ' dari ' + total + ' asesmen';
+        } else {
+            $('stat-pola').textContent = '-';
+            $('stat-pola-sub').textContent = 'belum ada pola menonjol';
+        }
+        $('stat-selesai').textContent = outcomes.selesai;
+        $('stat-selesai-sub').textContent = dipilih ? 'dari ' + dipilih + ' langkah yang dicoba' : 'belum ada langkah dicoba';
+        var sisa = Math.min.apply(null, list.map(function (r) { return daysLeft(r.createdAt); }));
+        $('stat-sisa').textContent = sisa + ' hari';
+        $('stat-sisa-sub').textContent = 'untuk riwayat tertua';
+
+        var bar = $('pola-bar');
+        bar.textContent = '';
+        ranked.slice(0, 4).forEach(function (slug) {
+            var p = data.patterns[slug];
+            var li = el('li');
+            var top = el('div', 'flex items-center justify-between gap-2 text-xs');
+            var name = el('span', 'inline-flex items-center gap-1.5 font-bold text-slate-800');
+            var ic = el('i', 'bx ' + p.icon + ' text-base');
+            ic.style.color = p.color;
+            name.appendChild(ic);
+            name.appendChild(document.createTextNode(p.title));
+            top.appendChild(name);
+            top.appendChild(el('span', 'font-bold text-slate-400', counts[slug] + ' dari ' + total));
+            var track = el('div', 'mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100');
+            var fill = el('div', 'h-full rounded-full');
+            fill.style.width = Math.round(counts[slug] / total * 100) + '%';
+            fill.style.backgroundColor = p.color;
+            track.appendChild(fill);
+            li.appendChild(top);
+            li.appendChild(track);
+            bar.appendChild(li);
+        });
+        if (!ranked.length) bar.appendChild(el('li', 'text-sm text-slate-500', 'Belum ada pola yang menonjol.'));
+
+        var note;
+        if (total < 2) note = 'Baru ada satu asesmen, jadi belum terlihat pola yang berulang. Ringkasan ini makin berguna kalau kamu mengisi lagi di hari yang berbeda.';
+        else if (ranked.length && counts[ranked[0]] >= 2) note = data.patterns[ranked[0]].title + ' muncul di ' + counts[ranked[0]] + ' dari ' + total + ' asesmenmu. Pola yang berulang bisa jadi petunjuk, tapi ini bukan diagnosis.';
+        else note = 'Polanya berbeda di tiap asesmen. Itu wajar, karena kondisi bisa berubah dari hari ke hari.';
+        $('pola-catatan').textContent = note;
+
+        var rows = [
+            ['selesai', 'Selesai', 'bx-check-circle', 'text-emerald-600'],
+            ['masih_berat', 'Masih berat', 'bx-cloud-rain', 'text-amber-600'],
+            ['istirahat_dulu', 'Istirahat dulu', 'bx-moon', 'text-sky-600'],
+            ['belum', 'Belum memilih langkah', 'bx-dots-horizontal-rounded', 'text-slate-400']
+        ];
+        var lr = $('langkah-ringkas');
+        lr.textContent = '';
+        rows.forEach(function (r) {
+            var li = el('li', 'flex items-center justify-between gap-3 rounded-2xl bg-slate-50 px-3 py-2 text-sm');
+            var left = el('span', 'inline-flex items-center gap-2 text-slate-700');
+            left.appendChild(el('i', 'bx ' + r[2] + ' text-lg ' + r[3]));
+            left.appendChild(document.createTextNode(r[1]));
+            li.appendChild(left);
+            li.appendChild(el('span', 'font-extrabold text-indigo-950', String(outcomes[r[0]])));
+            lr.appendChild(li);
+        });
+
+        var fav = modeOrder.slice().sort(function (a, b) { return modes[b] - modes[a]; })[0];
+        $('mode-favorit').textContent = fav
+            ? 'Cara yang paling sering kamu pilih: ' + data.modes[fav].title + '.'
+            : 'Setelah memilih langkah kecil, cara yang paling sering kamu pilih muncul di sini.';
+    }
+
     function render() {
         var list = Mindway.listAssessments();
         var empty = list.length === 0;
@@ -167,6 +314,8 @@ document.addEventListener('DOMContentLoaded', function () {
         $('state-kosong').hidden = !empty;
         $('state-isi').hidden = empty;
         if (empty) return;
+
+        renderRingkasan(list);
 
         var main = list[0];
         if (highlightId) list.forEach(function (x) { if (x.id === highlightId) main = x; });

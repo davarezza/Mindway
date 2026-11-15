@@ -29,10 +29,9 @@
 @endphp
 
 <main class="relative overflow-hidden">
-    <div class="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-violet-200/50 blur-3xl" aria-hidden="true"></div>
-    <div class="pointer-events-none absolute top-40 -right-24 h-80 w-80 rounded-full bg-sky-200/50 blur-3xl" aria-hidden="true"></div>
+    @include('partials.dekor.gaya')
+    @include('partials.dekor.beranda')
 
-    {{-- HERO --}}
     <section class="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pt-10 pb-16 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:pt-4 lg:pb-8">
         <div>
             <h1 class="mt-5 text-4xl leading-tight font-extrabold tracking-tight text-indigo-950 sm:text-5xl">
@@ -44,7 +43,7 @@
 
             <div class="mt-7 flex flex-wrap items-center gap-4">
                 <a href="{{ url('/asesmen') }}"
-                   class="inline-flex items-center gap-2 rounded-full bg-indigo-950 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
+                   class="inline-flex items-center gap-2 rounded-full bg-linear-to-r from-indigo-950 to-indigo-700 px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-900/25 transition hover:from-indigo-900 hover:to-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
                     Mulai Sekarang
                     <i class='bx bx-right-arrow-alt text-xl'></i>
                 </a>
@@ -88,7 +87,6 @@
         </div>
     </section>
 
-    {{-- CARA KERJA --}}
     <section id="cara-kerja" class="relative mx-auto max-w-6xl scroll-mt-20 px-4 pb-16 sm:px-6 lg:pb-24">
         <div class="max-w-xl">
             <h2 class="text-2xl font-extrabold tracking-tight text-indigo-950 sm:text-3xl">Cara kerjanya sederhana</h2>
@@ -97,7 +95,7 @@
 
         <ol class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             @foreach ($steps as $i => $step)
-                <li class="relative rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100">
+                <li class="relative rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-100 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-100">
                     <span class="flex h-11 w-11 items-center justify-center rounded-2xl text-2xl {{ $step['warna'] }}">
                         <i class='bx {{ $step['ikon'] }}'></i>
                     </span>
@@ -115,7 +113,7 @@
 
             <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                 @foreach ($advantages as $item)
-                    <li class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-indigo-100">
+                    <li class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-indigo-100 transition hover:-translate-y-1 hover:shadow-lg hover:shadow-indigo-100">
                         <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-indigo-100 text-2xl text-indigo-700">
                             <i class='bx {{ $item['ikon'] }}'></i>
                         </span>
@@ -127,14 +125,13 @@
         </div>
     </section>
 
-    {{-- CTA AKHIR --}}
     <section class="relative mx-auto max-w-3xl px-4 pb-16 text-center sm:px-6 lg:pb-20">
         <h2 class="text-2xl font-extrabold tracking-tight text-indigo-950 sm:text-3xl">Siap mulai dari yang kamu rasakan?</h2>
         <p class="mx-auto mt-3 max-w-md text-slate-600">
             Kamu bisa memakai Mindway tanpa akun. Riwayatmu tersimpan di perangkat ini dan bisa dihapus kapan saja.
         </p>
         <a href="{{ url('/asesmen') }}"
-           class="mt-6 inline-flex items-center gap-2 rounded-full bg-indigo-950 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-900/20 transition hover:bg-indigo-800 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
+           class="mt-6 inline-flex items-center gap-2 rounded-full bg-linear-to-r from-indigo-950 to-indigo-700 px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-indigo-900/25 transition hover:from-indigo-900 hover:to-indigo-600 focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2">
             Mulai Sekarang
             <i class='bx bx-right-arrow-alt text-xl'></i>
         </a>

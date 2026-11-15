@@ -9,6 +9,13 @@ use App\Support\Icon;
 
 class PetaController extends Controller
 {
+    /**
+     * Layar 5 (Peta Kondisiku), 6 (pertanyaan mode), 7 (langkah kecil), dan 8 (Ruang Tenang).
+     *
+     * Keempat layar berada di satu halaman dan dijalankan di browser. Server mengirim seluruh
+     * konten (pola, mode, pertanyaan, rencana, langkah) sebagai JSON, jadi mode yang dipilih
+     * pengguna tidak muncul di URL maupun log server. Asesmen dibaca dari localStorage lewat ?id=.
+     */
     public function index()
     {
         $patterns = Pattern::ordered()->get()->mapWithKeys(fn ($p) => [
